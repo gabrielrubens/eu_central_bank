@@ -19,6 +19,7 @@ class EuCentralBank < Money::Bank::VariableExchange
   CURRENCIES = %w(USD JPY BGN CZK DKK GBP HUF ILS ISK PLN RON SEK CHF NOK HRK RUB TRY AUD BRL CAD CNY HKD IDR INR KRW MXN MYR NZD PHP SGD THB ZAR).map(&:freeze).freeze
   ECB_RATES_URL = 'https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml'.freeze
   ECB_90_DAY_URL = 'https://www.ecb.europa.eu/stats/eurofxref/eurofxref-hist-90d.xml'.freeze
+  ECB_ALL_RATES_URL = 'https://www.ecb.europa.eu/stats/eurofxref/eurofxref-hist.xml'.freeze
 
   def initialize(st = Money::RatesStore::StoreWithHistoricalDataSupport.new, &block)
     super
@@ -31,6 +32,10 @@ class EuCentralBank < Money::Bank::VariableExchange
 
   def update_historical_rates(cache=nil)
     update_parsed_historical_rates(doc(cache, ECB_90_DAY_URL))
+  end
+
+  def update_all_time_historical_rates(cache=nil)
+    update_parsed_historical_rates(doc(cache, ECB_ALL_RATES_URL))
   end
 
   def save_rates(cache, url=ECB_RATES_URL)

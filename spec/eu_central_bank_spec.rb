@@ -7,6 +7,7 @@ describe "EuCentralBank" do
     @dir_path = File.dirname(__FILE__)
     @cache_path = File.expand_path(@dir_path + '/exchange_rates.xml')
     @history_cache_path = File.expand_path(@dir_path + '/exchange_rates_90_day.xml')
+    @all_thistory_cache_path = File.expand_path(@dir_path + '/exchange_rates_90_day.xml')
     @tmp_cache_path = File.expand_path(@dir_path + '/tmp/exchange_rates.xml')
     @tmp_history_cache_path = File.expand_path(@dir_path + '/tmp/exchange_rates_90_day.xml')
     yml_cache_path = File.expand_path(@dir_path + '/exchange_rates.yml')
@@ -102,6 +103,25 @@ describe "EuCentralBank" do
   it 'should set rates_updated_at when the rates are downloaded' do
     lu1 = @bank.historical_rates_updated_at
     @bank.update_historical_rates(@history_cache_path)
+    lu2 = @bank.historical_rates_updated_at
+
+    expect(lu1).not_to eq(lu2)
+  end
+
+  it 'should set all time historical last_updated when the rates are downloaded' do
+    lu1 = @bank.historical_last_updated
+    @bank.update_all_time_historical_rates(@all_thistory_cache_path)
+    lu2 = @bank.historical_last_updated
+    @bank.update_all_time_historical_rates(@all_thistory_cache_path)
+    lu3 = @bank.historical_last_updated
+
+    expect(lu1).not_to eq(lu2)
+    expect(lu2).not_to eq(lu3)
+  end
+
+  it 'should set all time rates_updated_at when the rates are downloaded' do
+    lu1 = @bank.historical_rates_updated_at
+    @bank.update_all_time_historical_rates(@all_thistory_cache_path)
     lu2 = @bank.historical_rates_updated_at
 
     expect(lu1).not_to eq(lu2)
