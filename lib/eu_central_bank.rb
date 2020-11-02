@@ -201,10 +201,12 @@ class EuCentralBank < Money::Bank::VariableExchange
 
     store.transaction true do
       rates.each do |exchange_rate|
-        rate = BigDecimal(exchange_rate.attribute("rate").value, DECIMAL_PRECISION)
-        currency = exchange_rate.attribute("currency").value
-        date = exchange_rate.parent.attribute("time").value
-        set_rate("EUR", currency, rate, date)
+        if check_currency_available(exchange_rate)
+          rate = BigDecimal(exchange_rate.attribute("rate").value, DECIMAL_PRECISION)
+          currency = exchange_rate.attribute("currency").value
+          date = exchange_rate.parent.attribute("time").value
+          set_rate("EUR", currency, rate, date)
+        end
       end
     end
 
